@@ -20,7 +20,7 @@ if (process.env.NODE_ENV.trim(" ") == "production") {
     playground: false,
     introspection: false,
   });
-  server.listen().then(({ url }) => {
+  server.listen(process.env.PORT || 5000).then(({ url }) => {
     console.log(`🚀  Production server ready at ${url}`);
   });
 }
