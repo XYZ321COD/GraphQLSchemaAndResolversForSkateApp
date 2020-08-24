@@ -10,7 +10,7 @@ const {
 module.exports = {
   Query: {
     async getUser(parent, { UserID }, context) {
-      const user = checkAuth(context);
+      const user_auth = checkAuth(context);
       const user = await context.prisma.user({
         UserID: UserID,
       });
