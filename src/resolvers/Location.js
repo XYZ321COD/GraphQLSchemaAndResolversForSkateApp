@@ -9,6 +9,7 @@ module.exports = {
       });
       return location.Rates;
     },
+
     async getLocation(parent, { LocationID }, context) {
       const user = checkAuth(context);
       const location = await context.prisma.location({
@@ -16,6 +17,7 @@ module.exports = {
       });
       return location;
     },
+
     async getLocationByName(parent, { Name }, context) {
       const user = checkAuth(context);
       const location = await context.prisma.location({
@@ -58,6 +60,7 @@ module.exports = {
       });
       return newLocaction;
     },
+
     async rateLocation(parent, args, context) {
       const user = checkAuth(context);
       try {

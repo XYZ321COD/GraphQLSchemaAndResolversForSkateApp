@@ -2,3 +2,4 @@
 /prisma
 /src/generated/prisma-client
 .vscode/
+config.js

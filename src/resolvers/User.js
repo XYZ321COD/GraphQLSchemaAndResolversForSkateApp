@@ -18,9 +18,15 @@ module.exports = {
     },
   },
   Mutation: {
-    async signup(parent, args, context) {
+    async signup(
+      parent,
+      {
+        registerData: { login, password, confirmPassword, mail },
+      },
+      context
+    ) {
       const user_check = await context.prisma.user({
-        Login: args.register.Login,
+        Login: login,
       });
       if (user_check) {
         throw new UserInputError("Login is taken", {
@@ -31,25 +37,20 @@ module.exports = {
       }
 
       const { valid, errors } = validateRegisterInput(
-        args.register.Login,
-        args.register.Mail,
-        args.register.Password,
-        args.register.confirmPassword,
-        args.register.Phone
+        login,
+        mail,
+        password,
+        confirmPassword
       );
-
       if (!valid) {
         throw new UserInputError("Errors", { errors });
       }
-      const password = await bcrypt.hash(args.register.Password, 10);
-
+      const passwordHashed = await bcrypt.hash(password, 10);
       const user = await context.prisma.createUser({
-        Login: args.register.Login,
-        Password: password,
-        Phone: args.register.Phone,
-        Mail: args.register.Mail,
+        Login: login,
+        Password: passwordHashed,
+        Mail: mail,
       });
-
       return {
         token: jwt.sign({ UserID: user.UserID }, SECRET_KEY, {
           expiresIn: "1h",
@@ -58,28 +59,25 @@ module.exports = {
       };
     },
 
-    async login(parent, args, context) {
-      const { valid, errors } = validateLoginInput(
-        args.login.Login,
-        args.login.Password
-      );
+    async login(
+      parent,
+      {
+        loginData: { login, password },
+      },
+      context
+    ) {
+      const { valid, errors } = validateLoginInput(login, password);
       if (!valid) {
         throw new UserInputError("Errors", { errors });
       }
-      const user = await context.prisma.user({ Login: args.login.Login });
-
+      const user = await context.prisma.user({ Login: login });
       if (!user) {
-        throw new Error(`No such user found for Login: ${args.login.Login}`);
+        throw new Error(`No such user found for Login: ${login}`);
       }
-
-      const password_valid = await bcrypt.compare(
-        args.login.Password,
-        user.Password
-      );
+      const password_valid = await bcrypt.compare(password, user.Password);
       if (!password_valid) {
         throw new Error("Invalid password");
       }
-
       return {
         token: jwt.sign({ User: user }, SECRET_KEY, {
           expiresIn: "1h",
