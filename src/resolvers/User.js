@@ -30,7 +30,7 @@ module.exports = {
       });
       if (user_check) {
         throw new UserInputError("Login is taken", {
-          error: {
+          errors: {
             Login: "This Login is taken",
           },
         });
