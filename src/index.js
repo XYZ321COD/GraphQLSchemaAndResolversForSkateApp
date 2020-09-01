@@ -40,7 +40,7 @@ if (process.env.NODE_ENV.trim(" ") === "development") {
     playground: true,
     introspection: true,
   });
-  server.listen().then(({ url }) => {
-    console.log(`🚀  Developement server ready at ${url}`);
+  server.listen(process.env.PORT || 5000).then(({ url }) => {
+    console.log(`🚀  Development server ready at ${url}`);
   });
 }
