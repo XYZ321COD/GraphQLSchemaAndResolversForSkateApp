@@ -25,7 +25,7 @@ if (process.env.NODE_ENV.trim(" ") == "production") {
   });
 }
 
-if (process.env.NODE_ENV.trim(" ") === "development") {
+if (process.env.NODE_ENV.trim(" ") == "development") {
   const server = new ApolloServer({
     typeDefs: typeDefs,
     resolvers,
