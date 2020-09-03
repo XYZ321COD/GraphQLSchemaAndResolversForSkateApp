@@ -48,7 +48,7 @@ const typeDefs = gql`
   type Mutation {
     signup(registerData: RegisterInput!): AuthPayload
     login(loginData: LoginInput!): AuthPayload
-    changePassword(Password: String!): AuthPayload
+    changePassword(Mail: String!): String
     createComment(comment: CommentInput!): Comment!
     deleteComment(CommentID: ID!): String
     createLocation(location: LocationInput!): Location!

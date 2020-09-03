@@ -1,7 +1,9 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { UserInputError } = require("apollo-server");
+const nodemailer = require("nodemailer");
 const SECRET_KEY = require("../config").SECRET_KEY;
+const generateNewPassowrd = require("../utils/generatePassword");
 const {
   validateRegisterInput,
   validateLoginInput,
@@ -84,6 +86,48 @@ module.exports = {
         }),
         user,
       };
+    },
+    async changePassword(parent, { mail }, context) {
+      const user = await context.prisma.users({
+        where: {
+          Mail: mail,
+        },
+      });
+      if (!user) {
+        throw new Error(`No such user found for email: ${mail}`);
+      }
+
+      const newPassword = generateNewPassowrd();
+
+      const user = await context.prisma.users({
+        data: {
+          Password: newPassword,
+        },
+        where: { Mail: mail },
+      });
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: "spottiesskate@gmail.com",
+          pass: "Spam5111!",
+        },
+      });
+      var mailOptions = {
+        from: "spottiesskate@gmail.com",
+        to: "michalznalezniak@gmail.com",
+        subject: "Zmiana hasla",
+        text:
+          "Zostalo wygenerowane dla Ciebie nowe haslo: " +
+          { newPassword } +
+          "\n Pamietaj, ze zawsze mozesz zmienic aktualne haslo w zakladce 'Zmien haslo'",
+      };
+      transporter.sendMail(mailOptions, function(error, info) {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log("Email sent: " + info.response);
+        }
+      });
     },
   },
 };
