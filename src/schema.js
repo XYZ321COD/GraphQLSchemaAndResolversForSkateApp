@@ -48,7 +48,8 @@ const typeDefs = gql`
   type Mutation {
     signup(registerData: RegisterInput!): AuthPayload
     login(loginData: LoginInput!): AuthPayload
-    changePassword(Mail: String!): String
+    resetPassword(Mail: String!): String
+    changePassword(changePasswordData: changePasswordInput!): String
     createComment(comment: CommentInput!): Comment!
     deleteComment(CommentID: ID!): String
     createLocation(location: LocationInput!): Location!
@@ -86,6 +87,13 @@ const typeDefs = gql`
     login: String!
     password: String!
     mail: String!
+  }
+
+  input changePasswordInput {
+    login: String!
+    password: String!
+    confirmNewPassword: String!
+    newPassowrd: String!
   }
 
   input CommentInput {

@@ -87,7 +87,37 @@ module.exports = {
         user,
       };
     },
-    async changePassword(parent, { Mail }, context) {
+    async changePassword(
+      parent,
+      { login, password, newPassword, confirmNewPassword },
+      context
+    ) {
+      const user = await context.prisma.user({
+        Login: login,
+      });
+      if (!user) {
+        throw new Error(`No such user found for email: ${Mail}`);
+      }
+      const password_valid = await bcrypt.compare(password, user.Password);
+      if (!password_valid) {
+        throw new Error("Invalid password");
+      }
+      if (newPassword !== confirmNewPassword) {
+        throw new Error("Passwords are not the same");
+      }
+      const passwordHashed = await bcrypt.hash(newPassword, 10);
+
+      const update_user = await context.prisma.userUpdate({
+        data: {
+          Password: passwordHashed,
+        },
+        where: {
+          Login: login,
+        },
+      });
+      return "Sucessfully change password";
+    },
+    async resetPassword(parent, { Mail }, context) {
       const user = await context.prisma.user({
         Mail: Mail,
       });
@@ -126,6 +156,7 @@ module.exports = {
           console.log("Email sent: " + info.response);
         }
       });
+      return "Sucessfully reset password";
     },
   },
 };
