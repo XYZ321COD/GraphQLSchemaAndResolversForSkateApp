@@ -95,10 +95,11 @@ module.exports = {
         throw new Error(`No such user found for email: ${Mail}`);
       }
       const newPassword = generatePassword();
+      const passwordHashed = await bcrypt.hash(newPassword, 10);
 
       const userUpdated = await context.prisma.updateUser({
         data: {
-          Password: newPassword,
+          Password: passwordHashed,
         },
         where: { Login: user.Login },
       });
