@@ -87,23 +87,20 @@ module.exports = {
         user,
       };
     },
-    async changePassword(parent, { mail }, context) {
-      const user = await context.prisma.users({
-        where: {
-          Mail: mail,
-        },
+    async changePassword(parent, { Mail }, context) {
+      const user = await context.prisma.user({
+        Mail: Mail,
       });
       if (!user) {
-        throw new Error(`No such user found for email: ${mail}`);
+        throw new Error(`No such user found for email: ${Mail}`);
       }
-
       const newPassword = generatePassword();
 
-      const userUpdated = await context.prisma.users({
+      const userUpdated = await context.prisma.updateUser({
         data: {
           Password: newPassword,
         },
-        where: { Mail: mail },
+        where: { Login: user.Login },
       });
       const transporter = nodemailer.createTransport({
         service: "gmail",
@@ -114,11 +111,11 @@ module.exports = {
       });
       var mailOptions = {
         from: "spottiesskate@gmail.com",
-        to: { mail },
+        to: Mail,
         subject: "Zmiana hasla",
         text:
-          "Zostalo wygenerowane dla Ciebie nowe haslo: " +
-          { newPassword } +
+          "Zostalo wygenerowane dla Ciebie nowe haslo:" +
+          newPassword +
           "\n Pamietaj, ze zawsze mozesz zmienic aktualne haslo w zakladce 'Zmien haslo'",
       };
       transporter.sendMail(mailOptions, function(error, info) {
@@ -128,7 +125,6 @@ module.exports = {
           console.log("Email sent: " + info.response);
         }
       });
-      return userUpdated;
     },
   },
 };

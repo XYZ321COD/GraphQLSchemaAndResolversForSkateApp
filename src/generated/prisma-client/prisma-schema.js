@@ -1144,6 +1144,7 @@ input UserWhereInput {
 input UserWhereUniqueInput {
   UserID: ID
   Login: String
+  Mail: String
 }
 `
       }

@@ -750,6 +750,7 @@ export interface CommentUpdateWithWhereUniqueWithoutLocationInput {
 export type UserWhereUniqueInput = AtLeastOne<{
   UserID: Maybe<ID_Input>;
   Login?: Maybe<String>;
+  Mail?: Maybe<String>;
 }>;
 
 export interface LikeUpdateManyWithWhereNestedInput {

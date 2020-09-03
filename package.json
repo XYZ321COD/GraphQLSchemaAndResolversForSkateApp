@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "node ./src/index.js",
+    "start": "SET DB_ENDPOINT= https://skatespotstest-ee81a0790e.herokuapp.com/BackEndSkateSpots/dev  &  SET NODE_ENV=development  & node ./src/index.js",
     "startDevelopment": "SET DB_ENDPOINT= https://skatespotstest-ee81a0790e.herokuapp.com/BackEndSkateSpots/dev  &  SET NODE_ENV=development & nodemon ./src/index.js",
     "startTesting": "SET DB_ENDPOINT= https://skatespotstestdata-03e6b9b48f.herokuapp.com/BackEndSkateSpotsTestData/dev &  SET NODE_ENV=development & nodemon ./src/index.js",
     "prisma": "prisma"
