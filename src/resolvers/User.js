@@ -99,7 +99,7 @@ module.exports = {
 
       const newPassword = generateNewPassowrd();
 
-      const user = await context.prisma.users({
+      const userUpdated = await context.prisma.users({
         data: {
           Password: newPassword,
         },
@@ -128,6 +128,7 @@ module.exports = {
           console.log("Email sent: " + info.response);
         }
       });
+      return userUpdated;
     },
   },
 };

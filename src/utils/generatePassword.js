@@ -1,4 +1,4 @@
-function generatePassword() {
+module.exports.generatePassword = () => {
   var pass = "";
   var str =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abcdefghijklmnopqrstuvwxyz0123456789@#$";
@@ -10,6 +10,4 @@ function generatePassword() {
   }
 
   return pass;
-}
-
-export default generatePassword;
+};
