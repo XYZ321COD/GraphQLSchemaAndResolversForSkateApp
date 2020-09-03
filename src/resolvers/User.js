@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const { UserInputError } = require("apollo-server");
 const nodemailer = require("nodemailer");
 const SECRET_KEY = require("../config").SECRET_KEY;
-const { generateNewPassowrd } = require("../utils/generatePassword");
+const { generatePassword } = require("../utils/generatePassword");
 const {
   validateRegisterInput,
   validateLoginInput,
@@ -97,7 +97,7 @@ module.exports = {
         throw new Error(`No such user found for email: ${mail}`);
       }
 
-      const newPassword = generateNewPassowrd();
+      const newPassword = generatePassword();
 
       const userUpdated = await context.prisma.users({
         data: {
