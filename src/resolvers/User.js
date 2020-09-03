@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const { UserInputError } = require("apollo-server");
 const nodemailer = require("nodemailer");
 const SECRET_KEY = require("../config").SECRET_KEY;
-const generateNewPassowrd = require("../utils/generatePassword");
+const { generateNewPassowrd } = require("../utils/generatePassword");
 const {
   validateRegisterInput,
   validateLoginInput,
