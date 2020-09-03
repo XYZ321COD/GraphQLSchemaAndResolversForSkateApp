@@ -93,7 +93,7 @@ const typeDefs = gql`
     login: String!
     password: String!
     confirmNewPassword: String!
-    newPassowrd: String!
+    newPassword: String!
   }
 
   input CommentInput {

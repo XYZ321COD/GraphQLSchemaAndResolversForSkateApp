@@ -89,7 +89,14 @@ module.exports = {
     },
     async changePassword(
       parent,
-      { login, password, newPassword, confirmNewPassword },
+      {
+        changePasswordData: {
+          login,
+          password,
+          newPassword,
+          confirmNewPassword,
+        },
+      },
       context
     ) {
       const user = await context.prisma.user({
@@ -107,7 +114,7 @@ module.exports = {
       }
       const passwordHashed = await bcrypt.hash(newPassword, 10);
 
-      const update_user = await context.prisma.userUpdate({
+      const update_user = await context.prisma.updateUser({
         data: {
           Password: passwordHashed,
         },
