@@ -114,7 +114,7 @@ module.exports = {
       });
       var mailOptions = {
         from: "spottiesskate@gmail.com",
-        to: "michalznalezniak@gmail.com",
+        to: { mail },
         subject: "Zmiana hasla",
         text:
           "Zostalo wygenerowane dla Ciebie nowe haslo: " +
