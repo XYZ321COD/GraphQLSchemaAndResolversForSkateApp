@@ -31,10 +31,20 @@ module.exports = {
       const user_check = await context.prisma.user({
         Login: login,
       });
+      const user_check2 = await context.prisma.user({
+        Mail: mail,
+      });
       if (user_check) {
         throw new UserInputError("Login is taken", {
           errors: {
             Login: "This Login is taken",
+          },
+        });
+      }
+      if (user_check2) {
+        throw new UserInputError("Email is taken", {
+          errors: {
+            Mail: "You already registered account with this mail",
           },
         });
       }
