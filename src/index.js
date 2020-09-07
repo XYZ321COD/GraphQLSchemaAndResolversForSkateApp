@@ -3,8 +3,6 @@ const { ApolloServer } = require("apollo-server");
 const resolvers = require("./resolvers");
 typeDefs = require("./schema");
 
-console.log(typeDefs);
-console.log(process.env.NODE_ENV);
 if (process.env.NODE_ENV.trim(" ") == "production") {
   const server = new ApolloServer({
     typeDefs: typeDefs,

@@ -4,6 +4,7 @@ const { UserInputError } = require("apollo-server");
 const nodemailer = require("nodemailer");
 const SECRET_KEY = require("../config").SECRET_KEY;
 const { generatePassword } = require("../utils/generatePassword");
+const { sendNewPassword } = require("../utils/sendNewPassword");
 const {
   validateRegisterInput,
   validateLoginInput,
@@ -11,7 +12,7 @@ const {
 
 module.exports = {
   Query: {
-    async getUser(parent, { UserID }, context) {
+    async getUser(_, { UserID }, context) {
       const user_auth = checkAuth(context);
       const user = await context.prisma.user({
         UserID: UserID,
@@ -21,7 +22,7 @@ module.exports = {
   },
   Mutation: {
     async signup(
-      parent,
+      _,
       {
         registerData: { login, password, confirmPassword, mail },
       },
@@ -62,7 +63,7 @@ module.exports = {
     },
 
     async login(
-      parent,
+      _,
       {
         loginData: { login, password },
       },
@@ -88,7 +89,7 @@ module.exports = {
       };
     },
     async changePassword(
-      parent,
+      _,
       {
         changePasswordData: {
           login,
@@ -103,7 +104,7 @@ module.exports = {
         Login: login,
       });
       if (!user) {
-        throw new Error(`No such user found for email: ${Mail}`);
+        throw new Error(`No such user found for login: ${login}`);
       }
       const password_valid = await bcrypt.compare(password, user.Password);
       if (!password_valid) {
@@ -124,7 +125,7 @@ module.exports = {
       });
       return "Sucessfully change password";
     },
-    async resetPassword(parent, { Mail }, context) {
+    async resetPassword(_, { Mail }, context) {
       const user = await context.prisma.user({
         Mail: Mail,
       });
@@ -140,29 +141,7 @@ module.exports = {
         },
         where: { Login: user.Login },
       });
-      const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: "spottiesskate@gmail.com",
-          pass: "Spam5111!",
-        },
-      });
-      var mailOptions = {
-        from: "spottiesskate@gmail.com",
-        to: Mail,
-        subject: "Zmiana hasla",
-        text:
-          "Zostalo wygenerowane dla Ciebie nowe haslo:" +
-          newPassword +
-          "\n Pamietaj, ze zawsze mozesz zmienic aktualne haslo w zakladce 'Zmien haslo'",
-      };
-      transporter.sendMail(mailOptions, function(error, info) {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log("Email sent: " + info.response);
-        }
-      });
+      sendNewPassword(Mail, newPassword);
       return "Sucessfully reset password";
     },
   },
