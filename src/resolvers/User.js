@@ -86,11 +86,13 @@ module.exports = {
       }
       const user = await context.prisma.user({ Login: login });
       if (!user) {
-        throw new Error(`No such user found for Username: ${login}`);
+        errors.username = `No such user found for Username: ${login}`
+        throw new UserInputError("Errors", { errors });
       }
       const password_valid = await bcrypt.compare(password, user.Password);
       if (!password_valid) {
-        throw new Error("Invalid password");
+        errors.password = `Invalid Password`
+        throw new UserInputError("Errors", { errors });
       }
       return {
         token: jwt.sign({ User: user }, SECRET_KEY, {
@@ -114,15 +116,7 @@ module.exports = {
       const user = await context.prisma.user({
         Login: login,
       });
-      if (!user) {
-        throw new Error(`No such user found for Username: ${login}`);
-      }
-      const password_valid = await bcrypt.compare(password, user.Password);
-
-      if (!password_valid) {
-        throw new Error("Invalid password");
-      }
-      const { valid, errors } = validateChangePasswordInput(
+      let { valid, errors } = validateChangePasswordInput(
         login,
         password,
         newPassword,
@@ -131,6 +125,16 @@ module.exports = {
       if (!valid) {
         throw new UserInputError("Errors", { errors });
       }
+      if (!user) {
+        errors.username ='No such user found for Username: ${login}`
+        throw new Error(`No such user found for Username: ${login}`);
+      }
+      const password_valid = await bcrypt.compare(password, user.Password);
+
+      if (!password_valid) {
+        throw new Error("Invalid password");
+      }
+
       const passwordHashed = await bcrypt.hash(newPassword, 10);
 
       await context.prisma.updateUser({
