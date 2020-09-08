@@ -1,13 +1,13 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { UserInputError } = require("apollo-server");
-const nodemailer = require("nodemailer");
 const SECRET_KEY = require("../config").SECRET_KEY;
 const { generatePassword } = require("../utils/generatePassword");
 const { sendNewPassword } = require("../utils/sendNewPassword");
 const {
   validateRegisterInput,
   validateLoginInput,
+  validateChangePasswordInput,
 } = require("../utils/validators");
 
 module.exports = {
@@ -117,15 +117,19 @@ module.exports = {
         throw new Error(`No such user found for login: ${login}`);
       }
       const password_valid = await bcrypt.compare(password, user.Password);
+
       if (!password_valid) {
         throw new Error("Invalid password");
       }
-      if (newPassword !== confirmNewPassword) {
-        throw new Error("Passwords are not the same");
-      }
+      validateChangePasswordInput(
+        login,
+        password,
+        newPassword,
+        confirmNewPassword
+      );
       const passwordHashed = await bcrypt.hash(newPassword, 10);
 
-      const update_user = await context.prisma.updateUser({
+      await context.prisma.updateUser({
         data: {
           Password: passwordHashed,
         },
@@ -145,7 +149,7 @@ module.exports = {
       const newPassword = generatePassword();
       const passwordHashed = await bcrypt.hash(newPassword, 10);
 
-      const userUpdated = await context.prisma.updateUser({
+      await context.prisma.updateUser({
         data: {
           Password: passwordHashed,
         },

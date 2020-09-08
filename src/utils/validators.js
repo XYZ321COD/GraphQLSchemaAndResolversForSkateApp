@@ -43,3 +43,28 @@ module.exports.validateLoginInput = (username, password) => {
     valid: Object.keys(errors).length < 1,
   };
 };
+
+module.exports.validateChangePasswordInput = (
+  username,
+  password,
+  newPassword,
+  confirmNewPassword
+) => {
+  const errors = {};
+  if (username.trim() === "") {
+    errors.username = "Username must not be empty";
+  }
+  if (password.trim() === "") {
+    errors.email = "Password must not be empty";
+  }
+  if (password === "") {
+    errors.password = "Password must not empty";
+  } else if (newPassword !== confirmNewPassword) {
+    errors.confirmPassword = "Passwords must match";
+  }
+
+  return {
+    errors,
+    valid: Object.keys(errors).length < 1,
+  };
+};
