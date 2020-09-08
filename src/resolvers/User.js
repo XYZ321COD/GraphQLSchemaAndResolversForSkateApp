@@ -8,6 +8,7 @@ const {
   validateRegisterInput,
   validateLoginInput,
   validateChangePasswordInput,
+  validateResetPasswordInput,
 } = require("../utils/validators");
 
 module.exports = {
@@ -121,12 +122,15 @@ module.exports = {
       if (!password_valid) {
         throw new Error("Invalid password");
       }
-      validateChangePasswordInput(
+      const { valid, errors } = validateChangePasswordInput(
         login,
         password,
         newPassword,
         confirmNewPassword
       );
+      if (!valid) {
+        throw new UserInputError("Errors", { errors });
+      }
       const passwordHashed = await bcrypt.hash(newPassword, 10);
 
       await context.prisma.updateUser({
@@ -140,6 +144,10 @@ module.exports = {
       return "Sucessfully change password";
     },
     async resetPassword(_, { Mail }, context) {
+      const { valid, errors } = validateResetPasswordInput(Mail);
+      if (!valid) {
+        throw new UserInputError("Errors", { errors });
+      }
       const user = await context.prisma.user({
         Mail: Mail,
       });
