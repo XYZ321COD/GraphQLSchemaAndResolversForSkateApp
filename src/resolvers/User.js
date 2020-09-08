@@ -126,13 +126,14 @@ module.exports = {
         throw new UserInputError("Errors", { errors });
       }
       if (!user) {
-        errors.username = "No such user found for Username: ${login}";
-        throw new Error(`No such user found for Username: ${login}`);
+        errors.username = `No such user found for Username: ${login}`;
+        throw new UserInputError("Errors", { errors });
       }
       const password_valid = await bcrypt.compare(password, user.Password);
 
       if (!password_valid) {
-        throw new Error("Invalid password");
+        errors.password = `Invalid Password`;
+        throw new UserInputError("Errors", { errors });
       }
 
       const passwordHashed = await bcrypt.hash(newPassword, 10);
