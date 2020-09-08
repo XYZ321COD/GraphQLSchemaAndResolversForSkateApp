@@ -66,10 +66,7 @@ module.exports.validateChangePasswordInput = (
     errors.username = "Username must not be empty";
   }
   if (password.trim() === "") {
-    errors.email = "Password must not be empty";
-  }
-  if (password === "") {
-    errors.password = "Password must not empty";
+    errors.password = "Password must not be empty";
   } else if (
     (newPassword !== confirmNewPassword) &
     (newPassword.trim() !== "")
