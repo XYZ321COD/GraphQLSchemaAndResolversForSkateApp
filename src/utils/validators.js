@@ -67,10 +67,10 @@ module.exports.validateChangePasswordInput = (
   }
   if (password.trim() === "") {
     errors.password = "Password must not be empty";
-  } else if (
-    (newPassword !== confirmNewPassword) &
-    (newPassword.trim() !== "")
-  ) {
+  }
+  if (newPassword.trim() === "") {
+    errors.newPassword = "New password must not be empty";
+  } else if (newPassword !== confirmNewPassword) {
     errors.confirmPassword = "Passwords must match";
   }
 
