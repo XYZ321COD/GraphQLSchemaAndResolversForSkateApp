@@ -144,7 +144,7 @@ module.exports = {
       return "Sucessfully change password";
     },
     async resetPassword(_, { Mail }, context) {
-      const { valid, errors } = validateResetPasswordInput(Mail);
+      let { valid, errors } = validateResetPasswordInput(Mail);
       if (!valid) {
         throw new UserInputError("Errors", { errors });
       }
@@ -152,7 +152,8 @@ module.exports = {
         Mail: Mail,
       });
       if (!user) {
-        throw new Error(`No such user found for Email: ${Mail}`);
+        errors.email = `No such user found for Email: ${Mail}`;
+        throw new UserInputError("Errors", { errors });
       }
       const newPassword = generatePassword();
       const passwordHashed = await bcrypt.hash(newPassword, 10);
