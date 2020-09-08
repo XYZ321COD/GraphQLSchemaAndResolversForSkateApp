@@ -85,7 +85,7 @@ module.exports = {
       }
       const user = await context.prisma.user({ Login: login });
       if (!user) {
-        throw new Error(`No such user found for Login: ${login}`);
+        throw new Error(`No such user found for Username: ${login}`);
       }
       const password_valid = await bcrypt.compare(password, user.Password);
       if (!password_valid) {
@@ -114,7 +114,7 @@ module.exports = {
         Login: login,
       });
       if (!user) {
-        throw new Error(`No such user found for login: ${login}`);
+        throw new Error(`No such user found for Username: ${login}`);
       }
       const password_valid = await bcrypt.compare(password, user.Password);
 
@@ -144,7 +144,7 @@ module.exports = {
         Mail: Mail,
       });
       if (!user) {
-        throw new Error(`No such user found for email: ${Mail}`);
+        throw new Error(`No such user found for Email: ${Mail}`);
       }
       const newPassword = generatePassword();
       const passwordHashed = await bcrypt.hash(newPassword, 10);
