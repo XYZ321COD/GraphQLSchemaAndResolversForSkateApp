@@ -80,7 +80,7 @@ module.exports = {
       },
       context
     ) {
-      const { valid, errors } = validateLoginInput(login, password);
+      let { valid, errors } = validateLoginInput(login, password);
       if (!valid) {
         throw new UserInputError("Errors", { errors });
       }
