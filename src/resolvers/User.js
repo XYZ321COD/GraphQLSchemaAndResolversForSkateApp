@@ -23,9 +23,16 @@ module.exports = {
   },
   Mutation: {
     async deleteUser(_, { Login }, context) {
+      const user = await context.prisma.user({ Login: login });
+      let errors = {};
+      if (!user) {
+        errors.username = `No such user found for Username: ${login}`;
+        throw new UserInputError("Errors", { errors });
+      }
       await context.prisma.deleteUser({
         Login: Login,
       });
+      return "Sucessfully deleted user";
     },
     async signup(
       _,
