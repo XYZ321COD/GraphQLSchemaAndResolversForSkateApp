@@ -57,6 +57,7 @@ const typeDefs = gql`
     rateLocation(Rate: Rate!): String!
     likeComment(LikeInput: LikeInput!): Like!
     unlikeComment(LikeID: ID!): String
+    deleteUser(Login: String!): String
   }
 
   type Query {

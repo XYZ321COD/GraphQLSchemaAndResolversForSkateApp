@@ -22,6 +22,11 @@ module.exports = {
     },
   },
   Mutation: {
+    async deleteUser(_, { Login }, context) {
+      await context.prisma.deleteUser({
+        Login: Login,
+      });
+    },
     async signup(
       _,
       {
