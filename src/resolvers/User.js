@@ -23,10 +23,10 @@ module.exports = {
   },
   Mutation: {
     async deleteUser(_, { Login }, context) {
-      const user = await context.prisma.user({ Login: login });
+      const user = await context.prisma.user({ Login: Login });
       let errors = {};
       if (!user) {
-        errors.username = `No such user found for Username: ${login}`;
+        errors.username = `No such user found for Username: ${Login}`;
         throw new UserInputError("Errors", { errors });
       }
       await context.prisma.deleteUser({
